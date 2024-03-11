@@ -1,41 +1,31 @@
 use bevy::prelude::*;
 use bevy_ecs_ldtk::prelude::*;
-use bevy_rapier2d::prelude::*;
+use systems::MyWorldCoords;
 
-mod components;
 mod systems;
+mod components;
 
 fn main() {
     App::new()
-    .add_plugins(DefaultPlugins.set(ImagePlugin::default_nearest()))
-    .add_plugins((
-        LdtkPlugin,
-        RapierPhysicsPlugin::<NoUserData>::pixels_per_meter(100.0),
-    ))
-    .insert_resource(RapierConfiguration {
-        gravity: Vec2::new(0.0, -2000.0), 
-        ..Default::default()
-    })
-    .insert_resource(LevelSelection::Uid(0))
-    .insert_resource(LdtkSettings {
-        level_spawn_behavior: LevelSpawnBehavior::UseWorldTranslation { 
-            load_level_neighbors: true, 
-        },
-        set_clear_color: SetClearColor::FromLevelBackground,
-        ..Default::default()
-    })
-    .add_systems(Startup, systems::setup)
-    .add_systems(Update, systems::spawn_wall_collision)
-    .add_systems(Update, systems::movement)
-    .add_systems(Update, systems::detect_climb_range)
-    .add_systems(Update, systems::ignore_gravity_if_climbing)
-    .register_ldtk_int_cell::<components::WallBundle>(1)
-    .register_ldtk_int_cell::<components::LadderBundle>(2)
-    .register_ldtk_int_cell::<components::WallBundle>(3)
-    .register_ldtk_entity::<components::PlayerBundle>("Player")
-    .register_ldtk_entity::<components::MobBundle>("Mob")
-    .register_ldtk_entity::<components::ChestBundle>("Chest")
-    .register_ldtk_entity::<components::PumpkinsBundle>("Pumpkins")
-    .run();
-    
+        .add_plugins(DefaultPlugins.set(ImagePlugin::default_nearest()))
+        .add_plugins(LdtkPlugin)
+        .add_systems(Startup, systems::setup)
+        .insert_resource(LevelSelection::index(0))
+        .register_ldtk_entity::<components::PlayerBundle>("Player")
+        .register_ldtk_entity::<components::GoalBundle>("Goal")
+        .add_systems(
+            Update, 
+            (
+                systems::move_player_from_input,
+                systems::translate_grid_coords_entities,
+                systems::cache_wall_locations,
+                systems::check_goal,
+                systems::cursor_system,
+            )
+        )
+        .register_ldtk_int_cell::<components::WallBundle>(1)
+        .init_resource::<components::LevelWalls>()         
+        .init_resource::<MyWorldCoords>() 
+        .run();
 }
+
