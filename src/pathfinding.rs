@@ -1,6 +1,6 @@
 use std::collections::VecDeque;
 
-use crate::{animation::{AnimationTimer, LastDirection}, components::{self, Distance}, systems::GRID_SIZE};
+use crate::{animation::{AnimationTimer, LastDirection}, components::{self, Distance} };
 use bevy::tasks::{AsyncComputeTaskPool, Task};
 use bevy::prelude::*;
 use bevy_ecs_ldtk::prelude::*;
@@ -37,50 +37,60 @@ pub struct PathfindingError;
 #[derive(Component)]
 pub struct PathfindingTask(Task<Result<Path, PathfindingError>>);
 
-pub fn neumann_neighbors(blocked_coords: &components::BlockedAreas, location: &GridCoords) -> Vec<(GridCoords, usize)> {
+pub fn neumann_neighbors(blocked_coords: &components::BlockedAreas, location: &GridCoords) -> Vec<GridCoords> {
     let (x, y) = (location.x, location.y);
     let mut successors = Vec::new();
-
+    
     if let Some(left) = x.checked_sub(1) {
         let location = GridCoords::new(left, y);
         if !blocked_coords.in_blocked_coords(&location) {
-            successors.push((location, 1));
+            successors.push(location);
         }
     }
     if let Some(down) = y.checked_sub(1) {
         let location = GridCoords::new(x, down);
         if !blocked_coords.in_blocked_coords(&location) {
-            successors.push((location, 1));
+            successors.push(location);
         }
     }
-    if x + 1 < GRID_SIZE {
-        let right = x + 1;
-        let location = GridCoords::new(right, y);
-        if !blocked_coords.in_blocked_coords(&location) {
-            successors.push((location, 1));
-        }
+    
+    let right = x + 1;
+    let location = GridCoords::new(right, y);
+    if !blocked_coords.in_blocked_coords(&location) {
+        successors.push(location);
     }
-    if y + 1 < GRID_SIZE {
-        let up = y + 1;
-        let location = GridCoords::new(x, up);
-        if !blocked_coords.in_blocked_coords(&location) {
-            successors.push((location, 1));
-        }
+
+    let up = y + 1;
+    let location = GridCoords::new(x, up);
+    if !blocked_coords.in_blocked_coords(&location) {
+        successors.push(location);
+    }
+    
+    for coords in successors.iter() {
+        println!("successors: x: {}, y: {}", coords.x, coords.y);
     }
     successors
 }
 
 
-pub fn path_to(
+pub fn   path_to(
     blocked_coords: &components::BlockedAreas,
     start: &GridCoords,
     goal: &GridCoords,
 ) -> Result<Path, PathfindingError> {
     let result = astar(
         start,
-         |p| neumann_neighbors(blocked_coords, p),
-          |p| p.distance(goal) as usize / 3,
-            |p| p == goal,
+         |p| {
+            neumann_neighbors(blocked_coords, p)
+            .iter()
+            .map(|neighbor| (neighbor.clone(), 1))
+            .collect::<Vec<_>>()
+         },
+          |p| p.distance(goal) / 3,
+            |p| {
+                println!("start: x {} y {} goal: x {} y {}", p.x, p.y, goal.x, goal.y);
+                p == goal
+            },
     );
 
     if let Some((steps, _length)) = result {

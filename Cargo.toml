@@ -12,7 +12,6 @@ bevy_rapier2d = "0.23.0"
 bevy-inspector-egui = "0.21.0"
 rand = "0.8.5"
 pathfinding = "4.9.1"
-noisy_float = "0.2.0"
 futures-lite = "*"
 
 

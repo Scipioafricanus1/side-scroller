@@ -1,0 +1,49 @@
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "type": "lldb",
+            "request": "launch",
+            "name": "Debug executable 'side-scroller'",
+            "env": {
+                "CARGO_MANIFEST_DIR": "${workspaceFolder}",
+                "LD_LIBRARY_PATH": "${workspaceFolder}/target/debug/deps:C:\\Users\\shado\\.rustup\\toolchains\\stable-x86_64-pc-windows-msvc",
+            },
+            "cargo": {
+                "args": [
+                    "build",
+                    "--bin=side-scroller",
+                    "--package=side-scroller"
+                ],
+                "filter": {
+                    "name": "side-scroller",
+                    "kind": "bin"
+                }
+            },
+            "args": [],
+            "cwd": "${workspaceFolder}"
+        },
+        {
+            "type": "lldb",
+            "request": "launch",
+            "name": "Debug unit tests in executable 'side-scroller'",
+            "cargo": {
+                "args": [
+                    "test",
+                    "--no-run",
+                    "--bin=side-scroller",
+                    "--package=side-scroller"
+                ],
+                "filter": {
+                    "name": "side-scroller",
+                    "kind": "bin"
+                }
+            },
+            "args": [],
+            "cwd": "${workspaceFolder}"
+        }
+    ]
+}

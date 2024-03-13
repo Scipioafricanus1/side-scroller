@@ -1,7 +1,6 @@
 use bevy::prelude::*;
 use bevy_ecs_ldtk::prelude::*;
 use std::collections::HashSet;
-use noisy_float::prelude::*;
 
 use crate::{animation::{AnimationTimer, LastDirection}, pathfinding::AiPath, systems::GRID_SIZE};
 
@@ -83,12 +82,11 @@ impl From<&MyWorldCoords> for GridCoords{
     }
 }
 pub trait Distance {
-    fn distance(&self, grid_coords: &GridCoords) -> i32;
+    fn distance(&self, grid_coords: &GridCoords) -> usize;
 }
 impl Distance for GridCoords {
-    fn distance(&self, grid_coords: &GridCoords) -> i32 {
-        let float: f32 = r32((self.x as f32 - grid_coords.x as f32).hypot(self.y as f32 - grid_coords.y as f32)).raw();
-        float.round() as i32
+    fn distance(&self, other: &GridCoords) -> usize {
+        (self.x.abs_diff(other.x) + self.y.abs_diff(other.y)) as usize
     }
 }
 
