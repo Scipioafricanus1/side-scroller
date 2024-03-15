@@ -1,4 +1,5 @@
-use bevy::prelude::*;
+use crate::prelude::*;
+
 
 #[derive(Component, Deref, DerefMut)]
 pub struct AnimationTimer(pub Timer);

@@ -1,9 +1,7 @@
 use std::collections::VecDeque;
 
-use crate::{animation::{AnimationTimer, LastDirection}, components::{self, Distance} };
+use crate::prelude::*;
 use bevy::tasks::{AsyncComputeTaskPool, Task};
-use bevy::prelude::*;
-use bevy_ecs_ldtk::prelude::*;
 use futures_lite::future;
 use pathfinding::prelude::*;
 
@@ -37,7 +35,7 @@ pub struct PathfindingError;
 #[derive(Component)]
 pub struct PathfindingTask(Task<Result<Path, PathfindingError>>);
 
-pub fn neumann_neighbors(blocked_coords: &components::BlockedAreas, location: &GridCoords) -> Vec<GridCoords> {
+pub fn neumann_neighbors(blocked_coords: &BlockedAreas, location: &GridCoords) -> Vec<GridCoords> {
     let (x, y) = (location.x, location.y);
     let mut successors = Vec::new();
     
@@ -74,7 +72,7 @@ pub fn neumann_neighbors(blocked_coords: &components::BlockedAreas, location: &G
 
 
 pub fn   path_to(
-    blocked_coords: &components::BlockedAreas,
+    blocked_coords: &BlockedAreas,
     start: &GridCoords,
     goal: &GridCoords,
 ) -> Result<Path, PathfindingError> {
@@ -103,7 +101,7 @@ pub fn   path_to(
 pub fn create_path (
     commands: &mut Commands,
     target: Entity,
-    blocked_coords: &components::BlockedAreas,
+    blocked_coords: &BlockedAreas,
     start: GridCoords,
     end: GridCoords,
 ) {
@@ -160,7 +158,7 @@ pub fn apply_pathfinding(
 }
 
 pub fn follow_path(
-    mut players: Query<(&mut AiPath, &mut GridCoords, &mut LastDirection, &mut AnimationTimer), With<components::Player>>,
+    mut players: Query<(&mut AiPath, &mut GridCoords, &mut LastDirection, &mut AnimationTimer), With<Player>>,
     time: Res<Time>,
 ) {
     for (mut path, mut grid_coords, mut last_direction, mut animation_timer) in players.iter_mut() {

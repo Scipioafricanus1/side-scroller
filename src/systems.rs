@@ -1,11 +1,18 @@
-use crate::{components::{self, Clickable, MainCamera, MyWorldCoords}, pathfinding::create_path};
-use bevy::{ prelude::*, window::PrimaryWindow};
-use bevy_ecs_ldtk::prelude::*;
+use crate::{components::{self, Clickable, MainCamera}, grid::{BlockedAreas, MyWorldCoords}, pathfinding::create_path};
+
+use components::Goal;
+use crate::prelude::*;
 
 
-pub const GRID_SIZE: i32 = 16;
 
-pub fn setup(mut commands: Commands, asset_server: Res<AssetServer>) {
+pub fn setup(
+    mut commands: Commands, 
+    asset_server: Res<AssetServer>,
+    mut windows: Query<&mut Window>,
+) {
+    let mut window = windows.single_mut();
+    window.set_maximized(true);
+
     let mut camera = Camera2dBundle::default();
     camera.projection.scale = 0.5;
     camera.transform.translation.x += 1280.0 / 4.0;
@@ -18,11 +25,17 @@ pub fn setup(mut commands: Commands, asset_server: Res<AssetServer>) {
     });
 }
 
+pub fn window_resize_system(mut resize_events: EventReader<WindowResized>) {
+    for event in resize_events.read() {
+        println!("width = {} height = {}", event.width, event.height);
+    }
+}
+
 
 pub fn move_player_from_input(
     mut players: Query<&mut GridCoords, With<components::Player>>,
     input: Res<Input<KeyCode>>,
-    level_walls: Res<components::BlockedAreas>,
+    level_walls: Res<BlockedAreas>,
 ) {
     let movement_direction = if input.just_pressed(KeyCode::W) {
         GridCoords::new(0, 1)
@@ -52,7 +65,7 @@ pub fn click_drag_pathing(
     q_camera: Query<(&Camera, &GlobalTransform), With<MainCamera>>,
     buttons: Res<Input<MouseButton>>,
     mut players: Query<(Entity, &GridCoords, &mut Clickable), With<components::Player>>,
-    blocked_areas: Res<components::BlockedAreas>,
+    blocked_areas: Res<BlockedAreas>,
 ) {
     let (camera, camera_transform) = q_camera.single();
     let window = q_window.single();
@@ -94,54 +107,10 @@ pub fn click_drag_pathing(
     }
 }
 
-
-
-pub fn translate_grid_coords_entities(
-    mut grid_coord_entities: Query<(&mut Transform, &GridCoords), Changed<GridCoords>>,
-) {
-    for (mut transform, grid_coords) in grid_coord_entities.iter_mut() {
-        transform.translation = 
-            bevy_ecs_ldtk::utils::grid_coords_to_translation(*grid_coords, IVec2::splat(GRID_SIZE))
-                .extend(transform.translation.z);
-    }
-}
-
-///NOTE: I made it more generic for any blocking entity,
-/// If enemies block you from entering their coords, 
-/// I'll add them to this method and change its name
-pub fn cache_wall_locations(
-    mut level_walls: ResMut<components::BlockedAreas>,
-    mut level_events: EventReader<LevelEvent>,
-    walls: Query<&GridCoords, With<components::Wall>>,
-    ldtk_project_entites: Query<&Handle<LdtkProject>>,
-    ldtk_project_assets: Res<Assets<LdtkProject>>,
-) {
-    for level_event in level_events.read() {
-        if let LevelEvent::Spawned(level_iid) = level_event {
-            let ldtk_project = ldtk_project_assets
-                .get(ldtk_project_entites.single())
-                .expect("LdtkProject should be loaded when level is spawned");
-            let level = ldtk_project
-                .get_raw_level_by_iid(level_iid.get())
-                .expect("spawned level should exist in project");
-            
-            let wall_locations = walls.iter().copied().collect();
-
-            let new_level_walls = components::BlockedAreas {
-                blocked_locations: wall_locations,
-                level_width: level.px_wid / GRID_SIZE,
-                level_height: level.px_hei / GRID_SIZE,
-            };
-
-            *level_walls = new_level_walls;
-        }
-    }
-}
-
 pub fn check_goal(
     level_selection: ResMut<LevelSelection>,
-    players: Query<&GridCoords, (With<components::Player>, Changed<GridCoords>)>,
-    goals: Query<&GridCoords, With<components::Goal>>,
+    players: Query<&GridCoords, (With<Player>, Changed<GridCoords>)>,
+    goals: Query<&GridCoords, With<Goal>>,
 ) {
     if players
         .iter()
