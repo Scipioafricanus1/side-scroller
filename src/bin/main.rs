@@ -1,13 +1,11 @@
-use bevy::{prelude::*, window::WindowMode};
 use bevy::input::common_conditions::input_toggle_active;
-use bevy_ecs_ldtk::prelude::*;
 use bevy_inspector_egui::quick::WorldInspectorPlugin;
 use side_scroller::prelude::*;
 
-
-
 pub const WIDTH: f32 = 2560.0;
 pub const HEIGHT: f32 = 1440.0;
+
+
 
 fn main() {
     App::new()
@@ -25,7 +23,7 @@ fn main() {
             .build(),
         )
         .add_plugins(LdtkPlugin)
-        .add_plugins(PathfindingPlugin)
+        .add_plugins((SchedulePlugin, StatePlugin, PathfindingPlugin, GridPlugin, MovementPlugin))
         .add_plugins(
             WorldInspectorPlugin::default().run_if(input_toggle_active(false, KeyCode::Escape)),
         )
@@ -36,17 +34,12 @@ fn main() {
         .add_systems(
             Update, 
             (
-                move_player_from_input,
-                translate_grid_coords_entities,
-                cache_wall_locations,
-                check_goal,
-                click_drag_pathing,
                 window_resize_system,
             )
         )
         .register_ldtk_int_cell::<WallBundle>(1)
         .init_resource::<BlockedAreas>()         
-        .init_resource::<MyWorldCoords>() 
+        .init_resource::<MyWorldCoords>()
         .run();
 }
 

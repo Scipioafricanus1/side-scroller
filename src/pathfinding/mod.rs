@@ -1,9 +1,8 @@
-use std::collections::VecDeque;
-
+mod pathfinding_structs;
 use crate::prelude::*;
-use bevy::tasks::{AsyncComputeTaskPool, Task};
-use futures_lite::future;
-use pathfinding::prelude::*;
+pub use pathfinding_structs::{PathfindingError, Path, PathfindingTask, AiPath};
+pub use bevy::tasks::AsyncComputeTaskPool;
+
 
 pub struct PathfindingPlugin;
 impl Plugin for PathfindingPlugin {
@@ -13,27 +12,10 @@ impl Plugin for PathfindingPlugin {
              (
                 apply_pathfinding,
                 follow_path,
-             )
+             ).chain().in_set(InGameSet::EntityUpdates)
         );
     }
 }
-
-#[derive(Component, Default)]
-pub struct AiPath {
-    pub locations: VecDeque<Vec2>,
-}
-
-pub struct Path {
-    pub steps: Vec<GridCoords>,
-}
-
-#[derive(Debug)]
-pub struct PathfindingError;
-
-
-
-#[derive(Component)]
-pub struct PathfindingTask(Task<Result<Path, PathfindingError>>);
 
 pub fn neumann_neighbors(blocked_coords: &BlockedAreas, location: &GridCoords) -> Vec<GridCoords> {
     let (x, y) = (location.x, location.y);
@@ -71,7 +53,7 @@ pub fn neumann_neighbors(blocked_coords: &BlockedAreas, location: &GridCoords) -
 }
 
 
-pub fn   path_to(
+pub fn path_to(
     blocked_coords: &BlockedAreas,
     start: &GridCoords,
     goal: &GridCoords,

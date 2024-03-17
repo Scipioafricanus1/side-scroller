@@ -2,10 +2,16 @@ mod grid_structs;
 pub use grid_structs::*;
 use crate::prelude::*;
 
+pub struct GridPlugin;
+impl Plugin for GridPlugin {
+    fn build(&self, app: &mut App) {
+        app.add_systems(Update, (
+            cache_wall_locations,
+            translate_grid_coords_entities,
+        ).chain().in_set(InGameSet::EntityUpdates));
+    }
+}
 
-///NOTE: I made it more generic for any blocking entity,
-/// If enemies block you from entering their coords, 
-/// I'll add them to this method and change its name
 pub fn cache_wall_locations(
     mut level_walls: ResMut<BlockedAreas>,
     mut level_events: EventReader<LevelEvent>,
