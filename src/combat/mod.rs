@@ -68,7 +68,7 @@ pub fn combat_turn(
         if let Ok((combat, player_opt)) = combat_entities.get(*entity){
             if let Some(player) = player_opt {
                 println!("This is a player-controlled character!");
-                initiative_rolls.initiatives.remove(0);
+                // initiative_rolls.initiatives.remove(0);
             } else { //should be an enemy then. don't have them implemented yet.
                 println!("They should be an enemy then.")
             }
