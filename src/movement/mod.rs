@@ -8,7 +8,7 @@ impl Plugin for MovementPlugin {
             click_drag_pathing,
             check_goal,
         )
-        .chain().in_set(InGameSet::EntityUpdates));
+        .in_set(InGameSet::EntityUpdates));
     }
 }
 

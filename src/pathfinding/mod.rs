@@ -12,7 +12,7 @@ impl Plugin for PathfindingPlugin {
              (
                 apply_pathfinding,
                 follow_path,
-             ).chain().in_set(InGameSet::EntityUpdates)
+             ).in_set(InGameSet::EntityUpdates)
         );
     }
 }

@@ -26,6 +26,7 @@ pub struct PlayerBundle {
     ai_path: AiPath,
     last_direction: LastDirection,
     animation_timer: AnimationTimer,
+    combat: Combat,
 }
 
 #[derive(Default, Component)]

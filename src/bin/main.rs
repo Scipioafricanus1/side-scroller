@@ -22,8 +22,7 @@ fn main() {
             })
             .build(),
         )
-        .add_plugins(LdtkPlugin)
-        .add_plugins((SchedulePlugin, StatePlugin, PathfindingPlugin, GridPlugin, MovementPlugin))
+        .add_plugins(GroupPlugins)
         .add_plugins(
             WorldInspectorPlugin::default().run_if(input_toggle_active(false, KeyCode::Escape)),
         )

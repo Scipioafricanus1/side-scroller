@@ -8,7 +8,7 @@ impl Plugin for GridPlugin {
         app.add_systems(Update, (
             cache_wall_locations,
             translate_grid_coords_entities,
-        ).chain().in_set(InGameSet::EntityUpdates));
+        ).in_set(InGameSet::EntityUpdates));
     }
 }
 
