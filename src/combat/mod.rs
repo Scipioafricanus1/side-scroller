@@ -61,13 +61,17 @@ impl Plugin for CombatPlugin {
 pub fn combat_turn(
     mut next_state: ResMut<NextState<CombatLoop>>,
     state: Res<State<CombatLoop>>,
-    combat_entities: Query<(&Combat, Option<&Player>)>, //Add Option Enemy too later.
+    mut combat_entities: Query<(&Combat, Option<&mut Clickable>, Option<&Player>)>, //Add Option Enemy too later.
     mut initiative_rolls: ResMut<InitiativeRolls>,
 ) { // queries initiative on change. 
     if let Some(entity) = initiative_rolls.initiatives.get(0) {
-        if let Ok((combat, player_opt)) = combat_entities.get(*entity){
+        if let Ok((combat, clickable_opt, player_opt)) = combat_entities.get_mut(*entity){
             if let Some(player) = player_opt {
-                println!("This is a player-controlled character!");
+                if let Some(mut clickable) = clickable_opt {
+                    println!("This is a player-controlled character!");
+                    clickable.is_clicked = true;
+                }
+                
                 // initiative_rolls.initiatives.remove(0);
             } else { //should be an enemy then. don't have them implemented yet.
                 println!("They should be an enemy then.")

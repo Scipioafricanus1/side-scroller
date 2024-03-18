@@ -30,6 +30,8 @@ fn main() {
         .insert_resource(LevelSelection::index(0))
         .register_ldtk_entity::<PlayerBundle>("Player")
         .register_ldtk_entity::<GoalBundle>("Goal")
+        .register_ldtk_entity::<EnemyBundle>("EnemyKnight")
+        .register_ldtk_entity::<EnemyBundle>("EnemyShooter")
         .add_systems(
             Update, 
             (
