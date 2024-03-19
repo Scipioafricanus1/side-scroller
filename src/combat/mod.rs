@@ -114,5 +114,3 @@ pub fn roll_initiative(
             _ => println!("Should always be startTurn when this runs")
         }
 }
-
-

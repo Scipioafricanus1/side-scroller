@@ -8,8 +8,10 @@ mod combat;
 mod schedule;
 mod state;
 mod randomizer;
+mod ai;
 
 pub mod prelude {
+    pub use crate::ai::*;
     pub use crate::schedule::*;
     pub use crate::state::*;
     pub use crate::systems::*;
