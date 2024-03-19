@@ -5,8 +5,6 @@ use side_scroller::prelude::*;
 pub const WIDTH: f32 = 2560.0;
 pub const HEIGHT: f32 = 1440.0;
 
-
-
 fn main() {
     App::new()
         .add_plugins(DefaultPlugins

@@ -60,20 +60,20 @@ impl Plugin for CombatPlugin {
 
 pub fn combat_turn(
     mut next_state: ResMut<NextState<CombatLoop>>,
-    state: Res<State<CombatLoop>>,
-    mut combat_entities: Query<(&Combat, Option<&mut Clickable>, Option<&Player>)>, //Add Option Enemy too later.
-    mut initiative_rolls: ResMut<InitiativeRolls>,
+    mut combat_entities: Query<(Option<&mut Clickable>, Option<&Player>, Option<&Enemy>), With<Combat>>, //Add Option Enemy too later.
+    initiative_rolls: Res<InitiativeRolls>,
 ) { // queries initiative on change. 
     if let Some(entity) = initiative_rolls.initiatives.get(0) {
-        if let Ok((combat, clickable_opt, player_opt)) = combat_entities.get_mut(*entity){
-            if let Some(player) = player_opt {
+        if let Ok((clickable_opt, player_opt, enemy_opt)) = combat_entities.get_mut(*entity){
+            if let Some(_) = player_opt {
                 if let Some(mut clickable) = clickable_opt {
-                    println!("This is a player-controlled character!");
-                    clickable.is_clicked = true;
+                    // println!("This is a player-controlled character!");
+                    //toggle whether a user can click this entity.
+                    clickable.clickable = true;
                 }
                 
                 // initiative_rolls.initiatives.remove(0);
-            } else { //should be an enemy then. don't have them implemented yet.
+            } else if let Some(_) = enemy_opt { //should be an enemy then. don't have them implemented yet.
                 println!("They should be an enemy then.")
             }
         } 
@@ -102,7 +102,7 @@ pub fn roll_initiative(
         initiatives.sort_by(|a, b| a.0.cmp(&b.0));
         
         for (value, entity) in initiatives.iter() {
-            println!("initiative value: {}", value);
+            println!("initiative value: {}, Entity: {:?}", value, entity);
         }
         initiative_rolls.initiatives = initiatives.iter().map(|val| val.1).collect();
 

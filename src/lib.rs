@@ -25,6 +25,6 @@ pub mod prelude {
     pub use futures_lite::future;
     pub use pathfinding::prelude::*;   
 
-    pub const RAND_VARIANCE: u32 = 3;
+    pub const RAND_VARIANCE: u32 = 20;
     
 }

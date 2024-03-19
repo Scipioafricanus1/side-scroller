@@ -58,29 +58,30 @@ pub fn click_drag_pathing(
         my_coords.0 = world_position;
         
         for (target, player_coords, mut clickable) in players.iter_mut() {
-            let destination = GridCoords::from(my_coords.as_ref());
-
-            if buttons.just_pressed(MouseButton::Left) {
-                //check if player entity clicked
-                if player_coords == &destination {
-                    clickable.is_clicked = true ;
+            if clickable.clickable {
+                let destination = GridCoords::from(my_coords.as_ref());
+                if buttons.just_pressed(MouseButton::Left) {
+                    //check if player entity clicked
+                    if player_coords == &destination {
+                        clickable.is_clicked = true ;
+                    }
                 }
-            }
-            if buttons.just_released(MouseButton::Left) {
-                //get path to location. 
-                if clickable.is_clicked && !blocked_areas.in_blocked_coords(&destination) {
-                    // *player_coords = destination; // sets player pos to destionation.
-                    // creates path for player to move towards slowly
-                    create_path(
-                        &mut commands,
-                        target,
-                        &blocked_areas,
-                        player_coords.clone(),
-                        destination,
-                    );
+                if buttons.just_released(MouseButton::Left) {
+                    //get path to location. 
+                    if clickable.is_clicked && !blocked_areas.in_blocked_coords(&destination) {
+                        // *player_coords = destination; // sets player pos to destionation.
+                        // creates path for player to move towards slowly
+                        create_path(
+                            &mut commands,
+                            target,
+                            &blocked_areas,
+                            player_coords.clone(),
+                            destination,
+                        );
+                    }
+                    clickable.is_clicked = false;
                 }
-                clickable.is_clicked = false;
-            }
+            }            
         }
     }
 }

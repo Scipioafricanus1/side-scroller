@@ -7,11 +7,13 @@ pub struct Player;
 
 #[derive(Component)]
 pub struct Clickable {
+    pub clickable: bool,
     pub is_clicked: bool,
 }
 impl Default for Clickable {
     fn default() -> Self {
         Clickable {
+            clickable: false,
             is_clicked: false
         }
     }
