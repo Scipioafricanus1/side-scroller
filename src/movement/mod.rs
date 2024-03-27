@@ -47,6 +47,7 @@ pub fn click_drag_pathing(
     buttons: Res<Input<MouseButton>>,
     mut players: Query<(Entity, &GridCoords, &mut Clickable), With<Player>>,
     blocked_areas: Res<BlockedAreas>,
+    mut initiative_rolls: ResMut<InitiativeRolls>,
 ) {
     let (camera, camera_transform) = q_camera.single();
     let window = q_window.single();
@@ -56,9 +57,8 @@ pub fn click_drag_pathing(
     .map(|ray| ray.origin.truncate())
     {
         my_coords.0 = world_position;
-        
-        for (target, player_coords, mut clickable) in players.iter_mut() {
-            if clickable.clickable {
+        if let Some(front) = initiative_rolls.initiatives.front() {
+            if let Ok((target, player_coords, mut clickable)) = players.get_mut(*front) {
                 let destination = GridCoords::from(my_coords.as_ref());
                 if buttons.just_pressed(MouseButton::Left) {
                     //check if player entity clicked
@@ -78,11 +78,13 @@ pub fn click_drag_pathing(
                             player_coords.clone(),
                             destination,
                         );
+                        initiative_rolls.initiatives.pop_front();
                     }
                     clickable.is_clicked = false;
-                }
-            }            
+                }     
         }
+        }
+        
     }
 }
 

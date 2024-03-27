@@ -39,5 +39,7 @@ impl PluginGroup for GroupPlugins {
         .add(GridPlugin)
         .add(MovementPlugin)
         .add(CombatPlugin)
+        .add(AIPlugin)
+        // .add(AnimatePlugin)
     }
 }

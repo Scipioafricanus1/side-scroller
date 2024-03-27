@@ -1,3 +1,5 @@
+use std::collections::VecDeque;
+
 use crate::prelude::*;
 
 #[derive(Debug, Clone, Copy, Default, Eq, PartialEq, Hash, States)]
@@ -38,7 +40,7 @@ impl Default for Combat {
 
 #[derive(Default, Resource, Clone)]
 pub struct InitiativeRolls {
-    pub initiatives: Vec<Entity>,
+    pub initiatives: VecDeque<Entity>,
 }
 
 
@@ -63,7 +65,7 @@ pub fn combat_turn(
     mut combat_entities: Query<(Option<&mut Clickable>, Option<&Player>, Option<&Enemy>), With<Combat>>, //Add Option Enemy too later.
     initiative_rolls: Res<InitiativeRolls>,
 ) { // queries initiative on change. 
-    if let Some(entity) = initiative_rolls.initiatives.get(0) {
+    if let Some(entity) = initiative_rolls.initiatives.front() {
         if let Ok((clickable_opt, player_opt, enemy_opt)) = combat_entities.get_mut(*entity){
             if let Some(_) = player_opt {
                 if let Some(mut clickable) = clickable_opt {
@@ -74,7 +76,6 @@ pub fn combat_turn(
                 
                 // initiative_rolls.initiatives.remove(0);
             } else if let Some(_) = enemy_opt { //should be an enemy then. don't have them implemented yet.
-                println!("They should be an enemy then.")
             }
         } 
     } 

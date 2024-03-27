@@ -11,7 +11,7 @@
 	"iid": "96b74480-6280-11ee-9465-71258fcae37f",
 	"jsonVersion": "1.5.3",
 	"appBuildId": 473703,
-	"nextUid": 74,
+	"nextUid": 78,
 	"identifierStyle": "Capitalize",
 	"toc": [],
 	"worldLayout": "LinearHorizontal",
@@ -434,7 +434,48 @@
 			"limitBehavior": "MoveLastOne",
 			"pivotX": 0,
 			"pivotY": 0,
-			"fieldDefs": []
+			"fieldDefs": [
+				{
+					"identifier": "EnemyType",
+					"doc": null,
+					"__type": "LocalEnum.EnemyType",
+					"uid": 76,
+					"type": "F_Enum(75)",
+					"isArray": false,
+					"canBeNull": false,
+					"arrayMinLength": null,
+					"arrayMaxLength": null,
+					"editorDisplayMode": "Hidden",
+					"editorDisplayScale": 1,
+					"editorDisplayPos": "Above",
+					"editorLinkStyle": "StraightArrow",
+					"editorDisplayColor": null,
+					"editorAlwaysShow": false,
+					"editorShowInWorld": true,
+					"editorCutLongValues": true,
+					"editorTextSuffix": null,
+					"editorTextPrefix": null,
+					"useForSmartColor": false,
+					"exportToToc": false,
+					"searchable": false,
+					"min": null,
+					"max": null,
+					"regex": null,
+					"acceptFileTypes": null,
+					"defaultOverride": {
+						"id": "V_String",
+						"params": ["Shooter"]
+					},
+					"textLanguageMode": null,
+					"symmetricalRef": false,
+					"autoChainRef": true,
+					"allowOutOfLevelRef": true,
+					"allowedRefs": "OnlySame",
+					"allowedRefsEntityUid": null,
+					"allowedRefTags": [],
+					"tilesetUid": null
+				}
+			]
 		},
 		{
 			"identifier": "EnemyKnight",
@@ -469,7 +510,48 @@
 			"limitBehavior": "MoveLastOne",
 			"pivotX": 0,
 			"pivotY": 0,
-			"fieldDefs": []
+			"fieldDefs": [
+				{
+					"identifier": "EnemyType",
+					"doc": null,
+					"__type": "LocalEnum.EnemyType",
+					"uid": 77,
+					"type": "F_Enum(75)",
+					"isArray": false,
+					"canBeNull": false,
+					"arrayMinLength": null,
+					"arrayMaxLength": null,
+					"editorDisplayMode": "Hidden",
+					"editorDisplayScale": 1,
+					"editorDisplayPos": "Above",
+					"editorLinkStyle": "StraightArrow",
+					"editorDisplayColor": null,
+					"editorAlwaysShow": false,
+					"editorShowInWorld": true,
+					"editorCutLongValues": true,
+					"editorTextSuffix": null,
+					"editorTextPrefix": null,
+					"useForSmartColor": false,
+					"exportToToc": false,
+					"searchable": false,
+					"min": null,
+					"max": null,
+					"regex": null,
+					"acceptFileTypes": null,
+					"defaultOverride": {
+						"id": "V_String",
+						"params": ["Knight"]
+					},
+					"textLanguageMode": null,
+					"symmetricalRef": false,
+					"autoChainRef": true,
+					"allowOutOfLevelRef": true,
+					"allowedRefs": "OnlySame",
+					"allowedRefsEntityUid": null,
+					"allowedRefTags": [],
+					"tilesetUid": null
+				}
+			]
 		}
 	], "tilesets": [
 		{
@@ -582,7 +664,7 @@
 				"averageColors": "1876000018760000298700002977000016550000165500001755000017550000175500001755000016550000165500001666000016660000276700002767"
 			}
 		}
-	], "enums": [], "externalEnums": [], "levelFields": [] },
+	], "enums": [{ "identifier": "EnemyType", "uid": 75, "values": [ { "id": "Shooter", "tileRect": null, "color": 12470831 }, { "id": "Knight", "tileRect": null, "color": 14120515 } ], "iconTilesetUid": null, "externalRelPath": null, "externalFileChecksum": null, "tags": [] }], "externalEnums": [], "levelFields": [] },
 	"levels": [
 		{
 			"identifier": "Level_0",
@@ -669,7 +751,7 @@
 							"height": 16,
 							"defUid": 70,
 							"px": [208,112],
-							"fieldInstances": []
+							"fieldInstances": [{ "__identifier": "EnemyType", "__type": "LocalEnum.EnemyType", "__value": "Shooter", "__tile": null, "defUid": 76, "realEditorValues": [] }]
 						},
 						{
 							"__identifier": "EnemyKnight",
@@ -683,7 +765,7 @@
 							"height": 16,
 							"defUid": 73,
 							"px": [304,64],
-							"fieldInstances": []
+							"fieldInstances": [{ "__identifier": "EnemyType", "__type": "LocalEnum.EnemyType", "__value": "Knight", "__tile": null, "defUid": 77, "realEditorValues": [] }]
 						}
 					]
 				},

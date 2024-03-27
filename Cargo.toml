@@ -13,6 +13,7 @@ bevy-inspector-egui = "0.21.0"
 rand = "0.8.5"
 pathfinding = "4.9.1"
 futures-lite = "*"
+thiserror = "1.0"
 
 
 # Enable a small amount of optimization in debug mode

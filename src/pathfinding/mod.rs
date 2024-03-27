@@ -45,10 +45,6 @@ pub fn neumann_neighbors(blocked_coords: &BlockedAreas, location: &GridCoords) -
     if !blocked_coords.in_blocked_coords(&location) {
         successors.push(location);
     }
-    
-    for coords in successors.iter() {
-        println!("successors: x: {}, y: {}", coords.x, coords.y);
-    }
     successors
 }
 
@@ -140,7 +136,7 @@ pub fn apply_pathfinding(
 }
 
 pub fn follow_path(
-    mut players: Query<(&mut AiPath, &mut GridCoords, &mut LastDirection, &mut AnimationTimer), With<Player>>,
+    mut players: Query<(&mut AiPath, &mut GridCoords, &mut LastDirection, &mut MovementTimer), >,
     time: Res<Time>,
 ) {
     for (mut path, mut grid_coords, mut last_direction, mut animation_timer) in players.iter_mut() {
@@ -155,8 +151,10 @@ pub fn follow_path(
                 last_direction.0 = direction.truncate();
             } else {
                 // println!("delta x rounded: {} \n delta y rounded: {}", delta.x.round(), delta.y.round() );
-                grid_coords.x += delta.x.round() as i32;
-                grid_coords.y += delta.y.round() as i32;
+                // grid_coords.x += delta.x.round() as i32;
+                // grid_coords.y += delta.y.round() as i32;
+                grid_coords.x = next_target.x as i32;
+                grid_coords.y = next_target.y as i32;
                 path.locations.pop_front();
             }
         }
